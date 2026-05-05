@@ -23,7 +23,7 @@ Registra un nuevo usuario tras el proceso de autenticación.
 
 ### `GET /api/v1/usuarios/me`
 Devuelve el perfil del usuario autenticado que solicita la información.
-- **Headers:** `X-Auth0-Id: auth0|32h41k`
+- **Headers:** `X-Auth0-Id: auth0|local_dummy_001`
 - **Response (`200 OK`):** `UsuarioResponseDTO`
 
 ---
