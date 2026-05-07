@@ -33,4 +33,15 @@ public class MascotaController {
     public ResponseEntity<List<MascotaResponseDTO>> getAllMascotas() {
         return ResponseEntity.ok(mascotaService.getAllMascotas());
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MascotaResponseDTO> updateMascota(@PathVariable Long id, @Valid @RequestBody MascotaRequestDTO request) {
+        return ResponseEntity.ok(mascotaService.updateMascota(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMascota(@PathVariable Long id) {
+        mascotaService.deleteMascota(id);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -9,4 +9,6 @@ public interface MascotaService {
     MascotaResponseDTO createMascota(MascotaRequestDTO request);
     MascotaResponseDTO getMascotaById(Long id);
     List<MascotaResponseDTO> getAllMascotas();
+    MascotaResponseDTO updateMascota(Long id, MascotaRequestDTO request);
+    void deleteMascota(Long id);
 }

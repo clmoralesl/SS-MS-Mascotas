@@ -38,4 +38,15 @@ public class ReporteController {
     public ResponseEntity<ReporteResponseDTO> cerrarReporte(@PathVariable Long id, @RequestHeader("X-Auth0-Id") String auth0Id) {
         return ResponseEntity.ok(reporteService.cerrarReporte(id, auth0Id));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ReporteResponseDTO> actualizarReporte(@PathVariable Long id, @Valid @RequestBody ReporteRequestDTO request, @RequestHeader("X-Auth0-Id") String auth0Id) {
+        return ResponseEntity.ok(reporteService.actualizarReporte(id, request, auth0Id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarReporte(@PathVariable Long id, @RequestHeader("X-Auth0-Id") String auth0Id) {
+        reporteService.eliminarReporte(id, auth0Id);
+        return ResponseEntity.noContent().build();
+    }
 }

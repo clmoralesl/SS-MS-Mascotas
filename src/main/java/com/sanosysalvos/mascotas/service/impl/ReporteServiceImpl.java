@@ -99,6 +99,44 @@ public class ReporteServiceImpl implements ReporteService {
         return mapearAResponse(reporte);
     }
 
+    @Override
+    @Transactional
+    public ReporteResponseDTO actualizarReporte(Long idReporte, ReporteRequestDTO request, String auth0Id) {
+        Reporte reporte = reporteRepository.findById(idReporte)
+                .orElseThrow(() -> new RuntimeException("Reporte no encontrado"));
+
+        if (!reporte.getUsuario().getAuth0Id().equals(auth0Id)) {
+            throw new RuntimeException("No tiene permisos para modificar este reporte");
+        }
+
+        Mascota mascota = mascotaRepository.findById(request.getIdMascota())
+                .orElseThrow(() -> new RuntimeException("Mascota no encontrada"));
+
+        TipoReporte tipoReporte = tipoReporteRepository.findById(request.getIdTipoReporte())
+                .orElseThrow(() -> new RuntimeException("Tipo de reporte no encontrado"));
+
+        reporte.setTipoReporte(tipoReporte);
+        reporte.setMascota(mascota);
+        reporte.setIdUbicacionReporte(request.getIdUbicacionReporte());
+        // Al actualizar no cambiamos fechaReporte ni el estado implícitamente, ni el usuario.
+
+        Reporte reporteActualizado = reporteRepository.save(reporte);
+        return mapearAResponse(reporteActualizado);
+    }
+
+    @Override
+    @Transactional
+    public void eliminarReporte(Long idReporte, String auth0Id) {
+        Reporte reporte = reporteRepository.findById(idReporte)
+                .orElseThrow(() -> new RuntimeException("Reporte no encontrado"));
+
+        if (!reporte.getUsuario().getAuth0Id().equals(auth0Id)) {
+            throw new RuntimeException("No tiene permisos para eliminar este reporte");
+        }
+
+        reporteRepository.delete(reporte);
+    }
+
     private ReporteResponseDTO mapearAResponse(Reporte reporte) {
         return ReporteResponseDTO.builder()
                 .idReporte(reporte.getIdReporte())

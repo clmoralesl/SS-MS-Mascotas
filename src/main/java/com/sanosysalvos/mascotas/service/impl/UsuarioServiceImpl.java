@@ -64,6 +64,40 @@ public class UsuarioServiceImpl implements UsuarioService {
         return mapToDTO(usuario);
     }
 
+    @Override
+    @Transactional
+    public UsuarioResponseDTO actualizarUsuario(String auth0Id, UsuarioRequestDTO request) {
+        Usuario usuario = usuarioRepository.findByAuth0Id(auth0Id)
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró un perfil para el Auth0 ID proporcionado."));
+
+        Long idTipoCuenta = (request.getIdTipoCuenta() != null) ? request.getIdTipoCuenta() : 1L;
+        TipoCuenta tipoCuenta = tipoCuentaRepository.findById(idTipoCuenta)
+                .orElseThrow(() -> new ResourceNotFoundException("Tipo de cuenta no encontrado con ID: " + idTipoCuenta));
+
+        Organizacion organizacion = null;
+        if (request.getIdOrganizacion() != null) {
+            organizacion = organizacionRepository.findById(request.getIdOrganizacion())
+                    .orElseThrow(() -> new ResourceNotFoundException("Organización no encontrada con ID: " + request.getIdOrganizacion()));
+        }
+
+        usuario.setNombre(request.getNombre());
+        usuario.setEmail(request.getEmail());
+        usuario.setTelefono(request.getTelefono());
+        usuario.setTipoCuenta(tipoCuenta);
+        usuario.setOrganizacion(organizacion);
+
+        Usuario guardado = usuarioRepository.save(usuario);
+        return mapToDTO(guardado);
+    }
+
+    @Override
+    @Transactional
+    public void eliminarUsuario(String auth0Id) {
+        Usuario usuario = usuarioRepository.findByAuth0Id(auth0Id)
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró un perfil para el Auth0 ID proporcionado."));
+        usuarioRepository.delete(usuario);
+    }
+
     // Helper metod para convertir a DTO
     private UsuarioResponseDTO mapToDTO(Usuario usuario) {
         return UsuarioResponseDTO.builder()

@@ -78,6 +78,55 @@ public class MascotaServiceImpl implements MascotaService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional
+    public MascotaResponseDTO updateMascota(Long id, MascotaRequestDTO request) {
+        Mascota mascota = mascotaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Mascota no encontrada con id: " + id));
+
+        Raza raza = razaRepository.findById(request.getIdRaza())
+                .orElseThrow(() -> new ResourceNotFoundException("Raza no encontrada con ID: " + request.getIdRaza()));
+
+        Tamanio tamanio = tamanioRepository.findById(request.getIdTamanio())
+                .orElseThrow(() -> new ResourceNotFoundException("Tamaño no encontrado con ID: " + request.getIdTamanio()));
+
+        List<Caracteristica> caracteristicas = new ArrayList<>();
+        if (request.getIdsCaracteristicas() != null && !request.getIdsCaracteristicas().isEmpty()) {
+            caracteristicas = caracteristicaRepository.findAllById(request.getIdsCaracteristicas());
+        }
+
+        mascota.setNombreMascota(request.getNombreMascota());
+        mascota.setDescripcion(request.getDescripcion());
+        mascota.setRaza(raza);
+        mascota.setTamanio(tamanio);
+        mascota.setCaracteristicas(caracteristicas);
+
+        if (request.getUrlsFotografias() != null && !request.getUrlsFotografias().isEmpty()) {
+            // Simple replace of photos. Typically you would diff them, but we clear and add.
+            mascota.getFotografias().clear();
+            List<Fotografia> fotografias = request.getUrlsFotografias().stream()
+                    .map(url -> Fotografia.builder()
+                            .urlFotografia(url)
+                            .mascota(mascota)
+                            .build())
+                    .collect(Collectors.toList());
+            mascota.getFotografias().addAll(fotografias);
+        } else if (mascota.getFotografias() != null) {
+            mascota.getFotografias().clear();
+        }
+
+        Mascota mascotaActualizada = mascotaRepository.save(mascota);
+        return mapToResponseDTO(mascotaActualizada);
+    }
+
+    @Override
+    @Transactional
+    public void deleteMascota(Long id) {
+        Mascota mascota = mascotaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Mascota no encontrada con id: " + id));
+        mascotaRepository.delete(mascota);
+    }
+
     private MascotaResponseDTO mapToResponseDTO(Mascota mascota) {
         return MascotaResponseDTO.builder()
                 .idMascota(mascota.getIdMascota())

@@ -9,4 +9,6 @@ public interface ReporteService {
     List<ReporteResponseDTO> obtenerTodosLosReportes();
     ReporteResponseDTO obtenerReportePorId(Long id);
     ReporteResponseDTO cerrarReporte(Long idReporte, String auth0Id);
+    ReporteResponseDTO actualizarReporte(Long idReporte, ReporteRequestDTO request, String auth0Id);
+    void eliminarReporte(Long idReporte, String auth0Id);
 }

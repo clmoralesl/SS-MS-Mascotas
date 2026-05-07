@@ -108,3 +108,34 @@ Marcador de caso "Cerrado" para cuando la mascota vuelve a su hogar. Verifica en
     "nombreMascota": "Bobby"
   }
   ```
+
+---
+
+## 4. Módulo Catálogos (/api/v1/catalogos)
+
+Endpoints de solo lectura (GET) para poblar listas desplegables (selects) en el Frontend. No requieren autenticación.
+
+### GET /api/v1/catalogos/razas`nDevuelve la lista de razas disponibles.
+- **Response (200 OK):** `List<CatalogoResponseDTO>` (id, descripcion)
+
+### GET /api/v1/catalogos/tamanios`nDevuelve la lista de tamaños disponibles (Pequeño, Mediano, etc.).
+- **Response (200 OK):** `List<CatalogoResponseDTO>` (id, descripcion)
+
+### GET /api/v1/catalogos/caracteristicas`nDevuelve la lista de características posibles para una mascota.
+- **Response (200 OK):** `List<CatalogoResponseDTO>` (id, descripcion)
+
+### GET /api/v1/catalogos/tipos-reporte`nDevuelve los tipos de reportes (ej. Perdido, Encontrado).
+- **Response (200 OK):** `List<CatalogoResponseDTO>` (id, descripcion)
+
+### GET /api/v1/catalogos/tipos-cuenta`nDevuelve los roles o tipos de cuenta de usuario (ej. Usuario, Refugio).
+- **Response (200 OK):** `List<CatalogoResponseDTO>` (id, descripcion)
+
+
+
+---
+
+### Resumen de nuevos Endpoints (CRUD Completados)
+- **Usuarios**: `PUT /api/v1/usuarios/me` y `DELETE /api/v1/usuarios/me`
+- **Mascotas**: `PUT /api/v1/mascotas/{id}` y `DELETE /api/v1/mascotas/{id}`
+- **Reportes**: `PUT /api/v1/reportes/{id}` y `DELETE /api/v1/reportes/{id}`
+
